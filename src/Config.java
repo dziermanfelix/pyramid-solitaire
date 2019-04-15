@@ -20,7 +20,7 @@ public class Config {
     public Config() {
         TILE_X = 13;
         TILE_Y = 8;
-        TILESIZE = new Size(90, 100);
+        TILESIZE = new Size(65, 90);
         blankColor = Color.BLACK;
         highlightColor = Color.PINK;
     }

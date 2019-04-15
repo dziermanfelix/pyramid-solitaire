@@ -38,7 +38,7 @@ public enum EnumPosition {
             case SIX_FOUR: return new BoardPosition(8, 6);
             case SIX_FIVE: return new BoardPosition(10, 6);
             case SIX_SIX: return new BoardPosition(12, 6);
-            case OFF: return new BoardPosition(999, 999);
+            case OFF: return new BoardPosition(1, 7);
             default : return null;
         }
     }

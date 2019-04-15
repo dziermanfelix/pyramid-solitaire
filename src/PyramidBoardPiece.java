@@ -61,11 +61,6 @@ public class PyramidBoardPiece {
         }
     }
 
-    /**
-     * Index In Range
-     * Helper method to get a random in range of the cards.
-     * @return Random index.
-     */
     private Integer indxInRange(Integer min, Integer max) {
         Random r = new Random();
         return r.nextInt((max - min) + 1) + min;
