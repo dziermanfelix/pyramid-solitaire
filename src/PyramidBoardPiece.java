@@ -1,4 +1,3 @@
-import edu.calpoly.spritely.Size;
 import edu.calpoly.spritely.SolidColorTile;
 import edu.calpoly.spritely.Tile;
 
@@ -7,18 +6,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PyramidBoardPieces {
-    private static PyramidBoardPieces instance;
-    private int MAXTILE = Config.getInstance().getMAX_SQUARE();
-    private Size TILESIZE = Config.getInstance().getTILESIZE();
-    private Tile[][] pyramidTiles = new Tile[MAXTILE][MAXTILE];   // the tile that is on the board at a given moment
+public class PyramidBoardPiece {
+    private Config config = Config.getInstance();
+    private Tile[][] pyramidTiles;
     private ArrayList<PyramidPiece> pieceList = new ArrayList<>();
     private Deck deck = new Deck();
     private ArrayList<EnumPosition> seenPositions = new ArrayList<>();
 
-    protected void initBoard() {
-        for (int x = 0; x < MAXTILE; x++) {
-            for (int y = 0; y < MAXTILE; y++) {
+    public PyramidBoardPiece() {
+        pyramidTiles = new Tile[config.getTILE_X()][config.getTILE_Y()];
+        initBoard();
+    }
+
+    private void initBoard() {
+        for (int x = 0; x < config.getTILE_X(); x++) {
+            for (int y = 0; y < config.getTILE_Y(); y++) {
                 pyramidTiles[x][y] = new SolidColorTile(Color.BLACK, '.');
             }
             addPyramidPieces();
@@ -27,13 +29,13 @@ public class PyramidBoardPieces {
     }
 
     private void addPyramidPiecesToArray() {
-        for(int x = 0; x < MAXTILE; x++) {
-            for(int y = 0; y < MAXTILE; y++) {
+        for(int x = 0; x < config.getTILE_X(); x++) {
+            for(int y = 0; y < config.getTILE_Y(); y++) {
                 for(int i = 0; i < pieceList.size(); i++) {
                     PyramidPiece piece = pieceList.get(i);
                     if((piece.getBoardPosition().getX() == x) && (piece.getBoardPosition().getY() == y)) {
                         try {
-                            pyramidTiles[x][y] = new PyramidTile(TILESIZE, Color.BLACK, piece);
+                            pyramidTiles[x][y] = new PyramidTile(config.getTILESIZE(), Color.BLACK, piece);
                         } catch(IOException e) {
                             e.printStackTrace();
                         }
@@ -42,21 +44,6 @@ public class PyramidBoardPieces {
                 }
             }
         }
-    }
-
-    public static PyramidBoardPieces getInstance() {
-        if(instance == null) {
-            instance = new PyramidBoardPieces();
-        }
-        return instance;
-    }
-
-    private PyramidBoardPieces() {
-        init();
-    }
-
-    private void init() {
-        initBoard();
     }
 
     private BoardPosition randomBoardPosition() {
@@ -88,6 +75,10 @@ public class PyramidBoardPieces {
         for(Card card : deck) {
             pieceList.add(new PyramidPiece(card, randomBoardPosition()));
         }
+    }
+
+    public SolidColorTile generateBlankTile() {
+        return new SolidColorTile(Color.BLACK, '.');
     }
 
     public Tile[][] getPyramidTiles() {

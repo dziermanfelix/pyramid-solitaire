@@ -6,12 +6,6 @@ public class Deck extends ArrayList<Card> {
         makeDeck();
     }
 
-    public Deck(Deck deck) {
-        for(Card card : deck) {
-            this.add(card);
-        }
-    }
-
     public void makeDeck() {
         this.add(new Card(EnumSuit.CLUBS, EnumValue.ACE, new File("data/images/AC.png")));
         this.add(new Card(EnumSuit.CLUBS, EnumValue.TWO, new File("data/images/2C.png")));

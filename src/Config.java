@@ -1,10 +1,14 @@
 import edu.calpoly.spritely.Size;
 
+import java.awt.*;
+
 public class Config {
     public static Config instance;
-
-    private final int MAX_SQUARE;
+    private final int TILE_X;
+    private final int TILE_Y;
     private final Size TILESIZE;
+    private final Color blankColor;
+    private final Color highlightColor;
 
     public static Config getInstance() {
         if(instance == null)
@@ -14,15 +18,30 @@ public class Config {
     }
 
     public Config() {
-        MAX_SQUARE = 13;
-        TILESIZE = new Size(50, 70);
+        TILE_X = 13;
+        TILE_Y = 8;
+        TILESIZE = new Size(90, 100);
+        blankColor = Color.BLACK;
+        highlightColor = Color.PINK;
     }
 
-    public int getMAX_SQUARE() {
-        return MAX_SQUARE;
+    public int getTILE_X() {
+        return TILE_X;
+    }
+
+    public int getTILE_Y() {
+        return TILE_Y;
     }
 
     public Size getTILESIZE() {
         return TILESIZE;
+    }
+
+    public Color getBlankColor() {
+        return blankColor;
+    }
+
+    public Color getHighlightColor() {
+        return highlightColor;
     }
 }

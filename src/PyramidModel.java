@@ -1,28 +1,25 @@
-import edu.calpoly.spritely.Size;
-import edu.calpoly.spritely.SolidColorTile;
 import edu.calpoly.spritely.Tile;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PyramidModel extends Thread implements InterfaceModel {
     private int startX;
     private int startY;
+    private PyramidBoardPiece pyramidBoardPiece = new PyramidBoardPiece();
     private Tile[][] gameBoardTiles;   // the tile that is on the board at a given moment
     private InterfaceMoveState preMoveState;
     private InterfaceMoveState moveState;
     private InterfaceMoveState currentState;
     private ArrayList<InterfaceView> observers = new ArrayList<>();
     private ReentrantLock lock = new ReentrantLock();
+    private Config config = Config.getInstance();
 
     public PyramidModel() {
         preMoveState = new PyramidStatePreMove(this);
         moveState = new PyramidStateMove(this);
         currentState = preMoveState;
-
-        PyramidBoardPieces pyramidBoardPieces = PyramidBoardPieces.getInstance();
-        gameBoardTiles = pyramidBoardPieces.getPyramidTiles();
+        gameBoardTiles = pyramidBoardPiece.getPyramidTiles();
     }
 
     @Override
@@ -33,7 +30,6 @@ public class PyramidModel extends Thread implements InterfaceModel {
 
     public void receiveClick(int x, int y) {
         currentState.receiveClick(x, y);
-        System.out.println(currentState);
         changeOccurred();
     }
 
@@ -68,34 +64,28 @@ public class PyramidModel extends Thread implements InterfaceModel {
     @Override
     public void notifyObservers() {
         ArrayList<InterfaceView> newList;
-
         lock.lock();
         try {
             newList = new ArrayList<>(observers);
         } finally {
             lock.unlock();
         }
-
         for(InterfaceView o : newList) {
             o.update();
         }
     }
 
     public void highlightTile(int x, int y) {
-        // I DON'T KNOW WHY I CAN'T JUST CHANGE THE COLOR OF THE EXISTING TILE HERE
-        // BUT FOR SOME REASON IT WON'T REPAINT IF I JUST DO THAT
-        Size TILESIZE = Config.getInstance().getTILESIZE();
         try {
-            gameBoardTiles[x][y] = new PyramidTile(TILESIZE, Color.PINK, pieceAt(x, y));
+            gameBoardTiles[x][y] = new PyramidTile(config.getTILESIZE(), config.getHighlightColor(), pieceAt(x, y));
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
 
     public void unHighlightTile(int x, int y) {
-        Size TILESIZE = Config.getInstance().getTILESIZE();
         try {
-            gameBoardTiles[x][y] = new PyramidTile(TILESIZE, Color.BLACK, pieceAt(x, y));
+            gameBoardTiles[x][y] = new PyramidTile(config.getTILESIZE(), config.getBlankColor(), pieceAt(x, y));
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -107,8 +97,6 @@ public class PyramidModel extends Thread implements InterfaceModel {
         if(startTile instanceof PyramidTile && endTile instanceof PyramidTile) {
             PyramidTile startPyramidTile = (PyramidTile) startTile;
             PyramidTile endPyramidTile = (PyramidTile) endTile;
-            System.out.println("Start comp: " + startPyramidTile.getPyramidPiece().getCard().getEnumValue().getComplement());
-            System.out.println("End Value: " + endPyramidTile.getPyramidPiece().getCard().getEnumValue());
             if(startPyramidTile.getPyramidPiece().getCard().getEnumValue().getComplement()
                     .equals(endPyramidTile.getPyramidPiece().getCard().getEnumValue())){
                 return true;
@@ -142,13 +130,9 @@ public class PyramidModel extends Thread implements InterfaceModel {
         throw new NullPointerException("Tile at " + x + ", " + y + " is not a PyramidTile");
     }
 
-    private SolidColorTile generateBlankTile() {
-        return new SolidColorTile(Color.BLACK, '.');
-    }
-
     public void doMove(int startX, int startY, int endX, int endY) {
-        gameBoardTiles[endX][endY] = generateBlankTile();
-        gameBoardTiles[startX][startY] = generateBlankTile();
+        gameBoardTiles[endX][endY] = pyramidBoardPiece.generateBlankTile();
+        gameBoardTiles[startX][startY] = pyramidBoardPiece.generateBlankTile();
     }
 
     public InterfaceMoveState getPreMoveState() {
@@ -179,13 +163,8 @@ public class PyramidModel extends Thread implements InterfaceModel {
         this.startY = startY;
     }
 
-    public InterfaceMoveState getCurrentState() {
-        return currentState;
-    }
-
     public Tile[][] getBoardTiles() {
         Tile[][] newArray;
-
         lock.lock();
         try {
             newArray = gameBoardTiles;

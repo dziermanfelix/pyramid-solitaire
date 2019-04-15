@@ -29,13 +29,6 @@ public class BoardPosition {
         return this.x == move.getX() && this.y == move.getY();
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public int getX() {
         return x;
     }

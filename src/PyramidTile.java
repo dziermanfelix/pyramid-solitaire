@@ -16,25 +16,14 @@ public class PyramidTile extends ImageTile {
 
     @Override
     public void paint(Graphics2D graphics2D, Size size) {
-        // fill the space with the correct color
         graphics2D.setColor(color);
         graphics2D.fillRect(0, 0, size.width, size.height);
-
-        // add the image
         super.paint(graphics2D, size);
     }
 
     @Override
     public char getText() {
         return super.getText();
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public Color getColor() {
-        return color;
     }
 
     public PyramidPiece getPyramidPiece() {

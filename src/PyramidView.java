@@ -4,13 +4,12 @@ import edu.calpoly.spritely.SpriteWindow;
 import edu.calpoly.spritely.Tile;
 
 public class PyramidView extends Thread implements InterfaceView {
-    private final int MAX_SQUARE = Config.getInstance().getMAX_SQUARE();
-    private final Size TILESIZE = Config.getInstance().getTILESIZE();
+    private Config config = Config.getInstance();
     private PyramidModel pyramidModel;
     private PyramidController pyramidController;
     private AnimationFrame frame;
     private SpriteWindow window;
-    private Tile[][] gameBoardTiles = new Tile[MAX_SQUARE][MAX_SQUARE];
+    private Tile[][] gameBoardTiles = new Tile[config.getTILE_X()][config.getTILE_Y()];
     private boolean boardChanged;
 
     public PyramidView(PyramidModel pyramidModel) {
@@ -20,8 +19,8 @@ public class PyramidView extends Thread implements InterfaceView {
     }
 
     public void setupWindow() {
-        this.window = new SpriteWindow("Pyramid Solitaire", new Size(MAX_SQUARE, MAX_SQUARE));
-        window.setTileSize(TILESIZE);
+        this.window = new SpriteWindow("Pyramid Solitaire", new Size(config.getTILE_X(), config.getTILE_Y()));
+        window.setTileSize(config.getTILESIZE());
         pyramidController.setUpMouseHandler(this);
         drawBoard(window.getInitialFrame());
         window.start();
@@ -35,8 +34,8 @@ public class PyramidView extends Thread implements InterfaceView {
 
     public void drawBoard(AnimationFrame frame) {
         gameBoardTiles = pyramidModel.getBoardTiles();
-        for(int x = 0; x < MAX_SQUARE; x++) {
-            for(int y = 0; y < MAX_SQUARE; y++) {
+        for(int x = 0; x < config.getTILE_X(); x++) {
+            for(int y = 0; y < config.getTILE_Y(); y++) {
                 frame.addTile(x, y, gameBoardTiles[x][y]);
             }
         }
