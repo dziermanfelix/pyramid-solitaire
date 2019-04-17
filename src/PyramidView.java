@@ -9,7 +9,6 @@ public class PyramidView extends Thread implements InterfaceView {
     private PyramidController pyramidController;
     private AnimationFrame frame;
     private SpriteWindow window;
-    private Tile[][] gameBoardTiles = new Tile[config.getTILE_X()][config.getTILE_Y()];
     private boolean boardChanged;
 
     public PyramidView(PyramidModel pyramidModel) {
@@ -33,7 +32,7 @@ public class PyramidView extends Thread implements InterfaceView {
     }
 
     public void drawBoard(AnimationFrame frame) {
-        gameBoardTiles = pyramidModel.getBoardTiles();
+        Tile[][] gameBoardTiles = pyramidModel.getBoardTiles();
         for(int x = 0; x < config.getTILE_X(); x++) {
             for(int y = 0; y < config.getTILE_Y(); y++) {
                 frame.addTile(x, y, gameBoardTiles[x][y]);

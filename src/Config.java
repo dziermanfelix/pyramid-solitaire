@@ -3,7 +3,7 @@ import edu.calpoly.spritely.Size;
 import java.awt.*;
 
 public class Config {
-    public static Config instance;
+    private static Config instance;
     private final int TILE_X;
     private final int TILE_Y;
     private final Size TILESIZE;
@@ -17,7 +17,7 @@ public class Config {
         return instance;
     }
 
-    public Config() {
+    private Config() {
         TILE_X = 13;
         TILE_Y = 8;
         TILESIZE = new Size(65, 90);
