@@ -1,1 +1,2 @@
 # PyramidSolitaire
+Pyramid Solitaire
