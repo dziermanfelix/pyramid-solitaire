@@ -11,6 +11,7 @@ public class PyramidController implements InterfaceController {
 
     @Override
     public void matchLoop() {
+        Config config = Config.getInstance();
         int x, y;
         while(pyramidView.getWindow().isRunning()) {
             pyramidView.setFrame(pyramidView.getWindow().waitForNextFrame());
@@ -22,8 +23,13 @@ public class PyramidController implements InterfaceController {
             if(pyramidMouseHandler.isClicked()) {
                 x = pyramidMouseHandler.getX();
                 y = pyramidMouseHandler.getY();
-                pyramidModel.receiveClick(x, y);
-                pyramidMouseHandler.toggleClicked();
+                System.out.println(x + "," + y);
+
+                // bounds check
+                if((x >= 0 && x < config.getTILE_X()) && (y >= 0 && y < config.getTILE_Y())) {
+                    pyramidModel.receiveClick(x, y);
+                    pyramidMouseHandler.toggleClicked();
+                }
             }
 
             if(pyramidView.isBoardChanged()) {
