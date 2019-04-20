@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class PyramidModel extends Thread implements InterfaceModel {
     private int startX;
     private int startY;
-    private PyramidBoardPiece pyramidBoardPiece = new PyramidBoardPiece();
+    private PyramidBoardPieceInit pyramidBoardPiece = new PyramidBoardPieceInit();
     private Tile[][] gameBoardTiles;   // the tile that is on the board at a given moment
     private InterfaceMoveState preMoveState;
     private InterfaceMoveState moveState;

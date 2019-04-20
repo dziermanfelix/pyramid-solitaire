@@ -8,6 +8,8 @@ public enum EnumPosition {
     SIX_ZERO, SIX_ONE, SIX_TWO, SIX_THREE, SIX_FOUR, SIX_FIVE, SIX_SIX,
     OFF;
 
+    private Config config = Config.getInstance();
+
     public BoardPosition getPosition() {
         switch(this) {
             case ZERO_ZERO: return new BoardPosition(6, 0);
@@ -38,7 +40,7 @@ public enum EnumPosition {
             case SIX_FOUR: return new BoardPosition(8, 6);
             case SIX_FIVE: return new BoardPosition(10, 6);
             case SIX_SIX: return new BoardPosition(12, 6);
-            case OFF: return new BoardPosition(1, 7);
+            case OFF: return new BoardPosition(config.getCardsInHandX(), config.getCardsInHandY());
             default : return null;
         }
     }

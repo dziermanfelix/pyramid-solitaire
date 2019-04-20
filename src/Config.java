@@ -10,6 +10,9 @@ public class Config {
     private final Color blankColor;
     private final Color highlightColor;
 
+    private final Integer cardsInHandX;
+    private final Integer cardsInHandY;
+
     public static Config getInstance() {
         if(instance == null)
             return instance = new Config();
@@ -23,6 +26,9 @@ public class Config {
         TILESIZE = new Size(65, 90);
         blankColor = Color.BLACK;
         highlightColor = Color.PINK;
+
+        cardsInHandX = 1;
+        cardsInHandY = 7;
     }
 
     public int getTILE_X() {
@@ -43,5 +49,13 @@ public class Config {
 
     public Color getHighlightColor() {
         return highlightColor;
+    }
+
+    public Integer getCardsInHandX() {
+        return cardsInHandX;
+    }
+
+    public Integer getCardsInHandY() {
+        return cardsInHandY;
     }
 }

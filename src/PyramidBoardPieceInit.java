@@ -6,26 +6,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PyramidBoardPiece {
+public class PyramidBoardPieceInit {
     private Config config = Config.getInstance();
     private Tile[][] pyramidTiles;
     private ArrayList<PyramidPiece> pieceList = new ArrayList<>();
+    private ArrayList<PyramidPiece> cardsInHand = new ArrayList<>();
     private Deck deck = new Deck();
-    private ArrayList<EnumPosition> seenPositions = new ArrayList<>();
 
-    public PyramidBoardPiece() {
+    private ArrayList<EnumPosition> seenPositions = new ArrayList<>();
+    private ArrayList<Card> seenCards = new ArrayList<>();
+
+    public PyramidBoardPieceInit() {
         pyramidTiles = new Tile[config.getTILE_X()][config.getTILE_Y()];
         initBoard();
     }
 
     private void initBoard() {
-        for (int x = 0; x < config.getTILE_X(); x++) {
-            for (int y = 0; y < config.getTILE_Y(); y++) {
+        for(int x = 0; x < config.getTILE_X(); x++) {
+            for(int y = 0; y < config.getTILE_Y(); y++) {
                 pyramidTiles[x][y] = new SolidColorTile(Color.BLACK, '.');
             }
-            addPyramidPieces();
-            addPyramidPiecesToArray();
         }
+        addPyramidPieces();
+        addPyramidPiecesToArray();
     }
 
     private void addPyramidPiecesToArray() {
@@ -46,6 +49,11 @@ public class PyramidBoardPiece {
         }
     }
 
+    private Integer indxInRange(Integer min, Integer max) {
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+    }
+
     private BoardPosition randomBoardPosition() {
         EnumPosition[] positions = EnumPosition.values();
         Integer indx;
@@ -55,20 +63,30 @@ public class PyramidBoardPiece {
         else {
             do {
                 indx = indxInRange(0, positions.length - 1);
-            } while (seenPositions.contains(positions[indx]) || indx == positions.length - 1);
+            } while(seenPositions.contains(positions[indx]) || indx == positions.length - 1);
             seenPositions.add(positions[indx]);
             return positions[indx].getPosition();
         }
     }
 
-    private Integer indxInRange(Integer min, Integer max) {
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
+    private Card randomCard() {
+        Integer indx;
+        do {
+            indx = indxInRange(0, deck.size() - 1);
+        } while(seenCards.contains(deck.get(indx)));
+        seenCards.add(deck.get(indx));
+        return deck.get(indx);
     }
 
     protected void addPyramidPieces() {
-        for(Card card : deck) {
-            pieceList.add(new PyramidPiece(card, randomBoardPosition()));
+        for(int i = 0; i < deck.size(); i++) {
+            Card card = randomCard();
+            BoardPosition position = randomBoardPosition();
+            if ((position.getX() == config.getCardsInHandX()) && (position.getY() == config.getCardsInHandY())) {
+                cardsInHand.add(new PyramidPiece(card, position));
+            } else {
+                pieceList.add(new PyramidPiece(card, position));
+            }
         }
     }
 
