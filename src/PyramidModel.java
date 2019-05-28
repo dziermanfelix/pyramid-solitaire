@@ -15,11 +15,17 @@ public class PyramidModel extends Thread implements InterfaceModel {
     private ReentrantLock lock = new ReentrantLock();
     private Config config = Config.getInstance();
 
+    private ArrayList<PyramidPiece> cards = new ArrayList<>();
+    private ArrayList<PyramidPiece> cardsInHand = new ArrayList<>();
+
     public PyramidModel() {
         preMoveState = new PyramidStatePreMove(this);
         moveState = new PyramidStateMove(this);
         currentState = preMoveState;
         gameBoardTiles = pyramidBoardPiece.getPyramidTiles();
+
+        cards = pyramidBoardPiece.getPieceList();
+        cardsInHand = pyramidBoardPiece.getCardsInHand();
     }
 
     @Override
@@ -172,5 +178,27 @@ public class PyramidModel extends Thread implements InterfaceModel {
             lock.unlock();
         }
         return newArray;
+    }
+
+    public ArrayList<PyramidPiece> getCardsInHand() {
+        ArrayList<PyramidPiece> newList;
+        lock.lock();
+        try {
+            newList = new ArrayList<>(cardsInHand);
+        } finally {
+            lock.unlock();
+        }
+        return newList;
+    }
+
+    public ArrayList<PyramidPiece> getCards() {
+        ArrayList<PyramidPiece> newList;
+        lock.lock();
+        try {
+            newList = new ArrayList<>(cards);
+        } finally {
+            lock.unlock();
+        }
+        return newList;
     }
 }

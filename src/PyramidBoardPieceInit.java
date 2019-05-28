@@ -82,12 +82,16 @@ public class PyramidBoardPieceInit {
         for(int i = 0; i < deck.size(); i++) {
             Card card = randomCard();
             BoardPosition position = randomBoardPosition();
-            if ((position.getX() == config.getCardsInHandX()) && (position.getY() == config.getCardsInHandY())) {
+            if((position.getX() == config.getCardsInHandX()) && (position.getY() == config.getCardsInHandY())) {
                 cardsInHand.add(new PyramidPiece(card, position));
             } else {
                 pieceList.add(new PyramidPiece(card, position));
             }
         }
+    }
+
+    public ArrayList<PyramidPiece> getCardsInHand() {
+        return cardsInHand;
     }
 
     public SolidColorTile generateBlankTile() {
@@ -96,5 +100,9 @@ public class PyramidBoardPieceInit {
 
     public Tile[][] getPyramidTiles() {
         return pyramidTiles;
+    }
+
+    public ArrayList<PyramidPiece> getPieceList() {
+        return pieceList;
     }
 }

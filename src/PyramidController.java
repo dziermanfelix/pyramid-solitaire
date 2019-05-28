@@ -23,7 +23,6 @@ public class PyramidController implements InterfaceController {
             if(pyramidMouseHandler.isClicked()) {
                 x = pyramidMouseHandler.getX();
                 y = pyramidMouseHandler.getY();
-                System.out.println(x + "," + y);
 
                 // bounds check
                 if((x >= 0 && x < config.getTILE_X()) && (y >= 0 && y < config.getTILE_Y())) {

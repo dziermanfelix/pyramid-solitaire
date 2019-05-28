@@ -13,6 +13,9 @@ public class Config {
     private final Integer cardsInHandX;
     private final Integer cardsInHandY;
 
+    private final Integer unturnedCardsX;
+    private final Integer unturnedCardsY;
+
     public static Config getInstance() {
         if(instance == null)
             return instance = new Config();
@@ -29,6 +32,9 @@ public class Config {
 
         cardsInHandX = 1;
         cardsInHandY = 7;
+
+        unturnedCardsX = 2;
+        unturnedCardsY = 7;
     }
 
     public int getTILE_X() {
@@ -57,5 +63,13 @@ public class Config {
 
     public Integer getCardsInHandY() {
         return cardsInHandY;
+    }
+
+    public Integer getUnturnedCardsX() {
+        return unturnedCardsX;
+    }
+
+    public Integer getUnturnedCardsY() {
+        return unturnedCardsY;
     }
 }
