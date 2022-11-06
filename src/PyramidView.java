@@ -1,12 +1,11 @@
 import edu.calpoly.spritely.*;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class PyramidView extends Thread implements InterfaceView {
-    private Config config = Config.getInstance();
-    private PyramidModel pyramidModel;
-    private PyramidController pyramidController;
+    private final Config config = Config.getInstance();
+    private final PyramidModel pyramidModel;
+    private final PyramidController pyramidController;
     private AnimationFrame frame;
     private SpriteWindow window;
     private boolean boardChanged;
@@ -18,23 +17,22 @@ public class PyramidView extends Thread implements InterfaceView {
     }
 
     public void setupWindow() {
-        this.window = new SpriteWindow("Pyramid Solitaire", new Size(config.getTILE_X(), config.getTILE_Y()));
-        window.setTileSize(config.getTILESIZE());
+        this.window = new SpriteWindow("Pyramid Solitaire", new Size(config.getTileX(), config.getTileY()));
+        window.setTileSize(config.getTileSize());
         pyramidController.setUpMouseHandler(this);
         drawBoard(window.getInitialFrame());
         window.start();
     }
 
-    @Override
-    public synchronized void run() {
+    @Override public synchronized void run() {
         setupWindow();
         pyramidController.matchLoop();
     }
 
     public void drawBoard(AnimationFrame frame) {
         Tile[][] gameBoardTiles = pyramidModel.getBoardTiles();
-        for(int x = 0; x < config.getTILE_X(); x++) {
-            for(int y = 0; y < config.getTILE_Y(); y++) {
+        for (int x = 0; x < config.getTileX(); x++) {
+            for (int y = 0; y < config.getTileY(); y++) {
                 frame.addTile(x, y, gameBoardTiles[x][y]);
             }
         }
@@ -48,7 +46,8 @@ public class PyramidView extends Thread implements InterfaceView {
 //        try {
 //            ArrayList<PyramidPiece> pieces = pyramidModel.getCards();
 //            for(PyramidPiece piece : pieces) {
-//                gameBoardTiles[piece.getBoardPosition().getX()][piece.getBoardPosition().getY()] = new PyramidTile(config.getTILESIZE(), Color.BLACK, piece);
+//                gameBoardTiles[piece.getBoardPosition().getX()][piece.getBoardPosition().getY()] = new PyramidTile
+//                (config.getTILESIZE(), Color.BLACK, piece);
 //            }
 //        }  catch (Exception e) {
 //            e.printStackTrace();
@@ -62,15 +61,16 @@ public class PyramidView extends Thread implements InterfaceView {
 
         try {
             PyramidPiece p = pyramidModel.getCardsInHand().get(0);
-            frame.addTile(config.getCardsInHandX(), config.getCardsInHandY(), new PyramidTile(config.getTILESIZE(), Color.BLACK, p));
-            frame.addTile(config.getUnturnedCardsX(), config.getUnturnedCardsY(), new PyramidTile(config.getTILESIZE(), Color.BLACK, p));
+            frame.addTile(config.getCardsInHandX(), config.getCardsInHandY(), new PyramidTile(config.getTileSize(),
+                    Color.BLACK, p));
+            frame.addTile(config.getUnturnedCardsX(), config.getUnturnedCardsY(), new PyramidTile(config.getTileSize(),
+                    Color.BLACK, p));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void update() {
+    @Override public void update() {
         boardChanged = true;
     }
 

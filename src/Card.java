@@ -1,9 +1,9 @@
 import java.io.File;
 
 public class Card {
-    private EnumSuit enumSuit;
-    private EnumValue enumValue;
-    private File file;
+    private final EnumSuit enumSuit;
+    private final EnumValue enumValue;
+    private final File file;
 
     public Card(EnumSuit enumSuit, EnumValue enumValue, File file) {
         this.enumSuit = enumSuit;
@@ -29,8 +29,7 @@ public class Card {
         return file;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return enumSuit + "" + enumValue;
     }
 }

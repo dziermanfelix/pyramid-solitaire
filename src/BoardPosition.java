@@ -9,18 +9,16 @@ public class BoardPosition {
         this.y = y;
     }
 
-    @Override
-    public int hashCode() {
+    @Override public int hashCode() {
         return Objects.hash(x, y);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
+    @Override public boolean equals(Object obj) {
+        if (obj == this) {
             return true;
         }
 
-        if(!(obj instanceof BoardPosition)) {
+        if (!(obj instanceof BoardPosition)) {
             return false;
         }
 
@@ -32,6 +30,7 @@ public class BoardPosition {
     public int getX() {
         return x;
     }
+
     public int getY() {
         return y;
     }

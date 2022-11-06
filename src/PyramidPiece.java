@@ -1,7 +1,7 @@
 public class PyramidPiece {
-    private Card card;
-    private BoardPosition boardPosition;
-    private char c;
+    private final Card card;
+    private final BoardPosition boardPosition;
+    private char pyramidPieceCharacter;
 
     public PyramidPiece(Card card, BoardPosition boardPosition) {
         this.card = card;
@@ -16,7 +16,7 @@ public class PyramidPiece {
         return card;
     }
 
-    public char getC() {
-        return c;
+    public char getPyramidPieceCharacter() {
+        return pyramidPieceCharacter;
     }
 }

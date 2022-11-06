@@ -1,5 +1,5 @@
 public class PyramidStatePreMove implements InterfaceMoveState {
-    private PyramidModel pyramidModel;
+    private final PyramidModel pyramidModel;
 
     private int x;
     private int y;
@@ -8,15 +8,14 @@ public class PyramidStatePreMove implements InterfaceMoveState {
         this.pyramidModel = pyramidModel;
     }
 
-    @Override
-    public void receiveClick(int x, int y) {
+    @Override public void receiveClick(int x, int y) {
         this.x = x;
         this.y = y;
         validatePiece();
     }
 
     private void validatePiece() {
-        if(pyramidModel.isPiece(x, y)) {
+        if (pyramidModel.isPiece(x, y)) {
             pyramidModel.highlightTile(x, y);
             pyramidModel.setStartX(x);
             pyramidModel.setStartY(y);

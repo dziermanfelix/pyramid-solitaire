@@ -83,7 +83,7 @@ public class PyramidModel extends Thread implements InterfaceModel {
 
     public void highlightTile(int x, int y) {
         try {
-            gameBoardTiles[x][y] = new PyramidTile(config.getTILESIZE(), config.getHighlightColor(), pieceAt(x, y));
+            gameBoardTiles[x][y] = new PyramidTile(config.getTileSize(), config.getHighlightColor(), pieceAt(x, y));
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -91,7 +91,7 @@ public class PyramidModel extends Thread implements InterfaceModel {
 
     public void unHighlightTile(int x, int y) {
         try {
-            gameBoardTiles[x][y] = new PyramidTile(config.getTILESIZE(), config.getBlankColor(), pieceAt(x, y));
+            gameBoardTiles[x][y] = new PyramidTile(config.getTileSize(), config.getBlankColor(), pieceAt(x, y));
         } catch(Exception e) {
             e.printStackTrace();
         }

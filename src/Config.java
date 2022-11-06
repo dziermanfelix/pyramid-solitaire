@@ -2,11 +2,11 @@ import edu.calpoly.spritely.Size;
 
 import java.awt.*;
 
-public class Config {
+public final class Config {
     private static Config instance;
-    private final int TILE_X;
-    private final int TILE_Y;
-    private final Size TILESIZE;
+    private final int tileX;
+    private final int tileY;
+    private final Size tileSize;
     private final Color blankColor;
     private final Color highlightColor;
 
@@ -17,16 +17,15 @@ public class Config {
     private final Integer unturnedCardsY;
 
     public static Config getInstance() {
-        if(instance == null)
-            return instance = new Config();
+        if (instance == null) return instance = new Config();
 
         return instance;
     }
 
     private Config() {
-        TILE_X = 13;
-        TILE_Y = 8;
-        TILESIZE = new Size(65, 90);
+        tileX = 13;
+        tileY = 8;
+        tileSize = new Size(65, 90);
         blankColor = Color.BLACK;
         highlightColor = Color.PINK;
 
@@ -37,16 +36,16 @@ public class Config {
         unturnedCardsY = 7;
     }
 
-    public int getTILE_X() {
-        return TILE_X;
+    public int getTileX() {
+        return tileX;
     }
 
-    public int getTILE_Y() {
-        return TILE_Y;
+    public int getTileY() {
+        return tileY;
     }
 
-    public Size getTILESIZE() {
-        return TILESIZE;
+    public Size getTileSize() {
+        return tileSize;
     }
 
     public Color getBlankColor() {

@@ -21,11 +21,11 @@ public class PyramidController implements InterfaceController {
             }
 
             if(pyramidMouseHandler.isClicked()) {
-                x = pyramidMouseHandler.getX();
-                y = pyramidMouseHandler.getY();
+                x = pyramidMouseHandler.getMouseX();
+                y = pyramidMouseHandler.getMouseY();
 
                 // bounds check
-                if((x >= 0 && x < config.getTILE_X()) && (y >= 0 && y < config.getTILE_Y())) {
+                if((x >= 0 && x < config.getTileX()) && (y >= 0 && y < config.getTileY())) {
                     pyramidModel.receiveClick(x, y);
                     pyramidMouseHandler.toggleClicked();
                 }
