@@ -36,29 +36,6 @@ public class PyramidView extends Thread implements InterfaceView {
                 frame.addTile(x, y, gameBoardTiles[x][y]);
             }
         }
-
-//        Tile[][] gameBoardTiles = new Tile[config.getTILE_X()][config.getTILE_Y()];
-//        for(int i = 0; i < config.getTILE_X(); i++) {
-//            for(int j = 0; j < config.getTILE_Y(); j++) {
-//                gameBoardTiles[i][j] = new SolidColorTile(Color.BLACK, '.');
-//            }
-//        }
-//        try {
-//            ArrayList<PyramidPiece> pieces = pyramidModel.getCards();
-//            for(PyramidPiece piece : pieces) {
-//                gameBoardTiles[piece.getBoardPosition().getX()][piece.getBoardPosition().getY()] = new PyramidTile
-//                (config.getTILESIZE(), Color.BLACK, piece);
-//            }
-//        }  catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        for(int x = 0; x < config.getTILE_X(); x++) {
-//            for(int y = 0; y < config.getTILE_Y(); y++) {
-//                frame.addTile(x, y, gameBoardTiles[x][y]);
-//            }
-//         }
-
         try {
             PyramidPiece p = pyramidModel.getCardsInHand().get(0);
             frame.addTile(config.getCardsInHandX(), config.getCardsInHandY(), new PyramidTile(config.getTileSize(),

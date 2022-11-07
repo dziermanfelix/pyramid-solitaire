@@ -7,7 +7,7 @@ public class PyramidModel extends Thread implements InterfaceModel {
     private int startX;
     private int startY;
     private final PyramidBoardPieceInit pyramidBoardPiece = new PyramidBoardPieceInit();
-    private final Tile[][] gameBoardTiles;   // the tile that is on the board at a given moment
+    private final Tile[][] gameBoardTiles;
     private final InterfaceMoveState preMoveState;
     private final InterfaceMoveState moveState;
     private InterfaceMoveState currentState;
