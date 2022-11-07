@@ -6,41 +6,37 @@ import java.util.concurrent.locks.ReentrantLock;
 public class PyramidModel extends Thread implements InterfaceModel {
     private int startX;
     private int startY;
-    private PyramidBoardPieceInit pyramidBoardPiece = new PyramidBoardPieceInit();
-    private Tile[][] gameBoardTiles;   // the tile that is on the board at a given moment
-    private InterfaceMoveState preMoveState;
-    private InterfaceMoveState moveState;
+    private final PyramidBoardPieceInit pyramidBoardPiece = new PyramidBoardPieceInit();
+    private final Tile[][] gameBoardTiles;   // the tile that is on the board at a given moment
+    private final InterfaceMoveState preMoveState;
+    private final InterfaceMoveState moveState;
     private InterfaceMoveState currentState;
     private ArrayList<InterfaceView> observers = new ArrayList<>();
-    private ReentrantLock lock = new ReentrantLock();
-    private Config config = Config.getInstance();
-
-    private ArrayList<PyramidPiece> cards = new ArrayList<>();
-    private ArrayList<PyramidPiece> cardsInHand = new ArrayList<>();
+    private final ReentrantLock lock = new ReentrantLock();
+    private final Config config = Config.getInstance();
+    private final ArrayList<PyramidPiece> cards;
+    private final ArrayList<PyramidPiece> cardsInHand;
 
     public PyramidModel() {
         preMoveState = new PyramidStatePreMove(this);
         moveState = new PyramidStateMove(this);
         currentState = preMoveState;
         gameBoardTiles = pyramidBoardPiece.getPyramidTiles();
-
         cards = pyramidBoardPiece.getPieceList();
         cardsInHand = pyramidBoardPiece.getCardsInHand();
     }
 
-    @Override
-    public void run() {
+    @Override public void run() {
         PyramidView v = new PyramidView(this);
         v.start();
     }
 
-    public void receiveClick(int x, int y) {
-        currentState.receiveClick(x, y);
+    public void receiveClick(int mouseX, int mouseY) {
+        currentState.receiveClick(mouseX, mouseY);
         changeOccurred();
     }
 
-    @Override
-    public void addObserver(InterfaceView observer) {
+    @Override public void addObserver(InterfaceView observer) {
         lock.lock();
         try {
             ArrayList<InterfaceView> newList = new ArrayList<>(observers);
@@ -51,8 +47,7 @@ public class PyramidModel extends Thread implements InterfaceModel {
         }
     }
 
-    @Override
-    public void removeObserver(InterfaceView observer) {
+    @Override public void removeObserver(InterfaceView observer) {
         lock.lock();
         try {
             ArrayList<InterfaceView> newList = new ArrayList<>(observers);
@@ -67,8 +62,7 @@ public class PyramidModel extends Thread implements InterfaceModel {
         notifyObservers();
     }
 
-    @Override
-    public void notifyObservers() {
+    @Override public void notifyObservers() {
         ArrayList<InterfaceView> newList;
         lock.lock();
         try {
@@ -76,23 +70,25 @@ public class PyramidModel extends Thread implements InterfaceModel {
         } finally {
             lock.unlock();
         }
-        for(InterfaceView o : newList) {
+        for (InterfaceView o : newList) {
             o.update();
         }
     }
 
-    public void highlightTile(int x, int y) {
+    public void highlightTile(int positionX, int positionY) {
         try {
-            gameBoardTiles[x][y] = new PyramidTile(config.getTileSize(), config.getHighlightColor(), pieceAt(x, y));
-        } catch(Exception e) {
+            gameBoardTiles[positionX][positionY] = new PyramidTile(config.getTileSize(), config.getHighlightColor(),
+                    pieceAt(positionX, positionY));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void unHighlightTile(int x, int y) {
+    public void unHighlightTile(int positionX, int positionY) {
         try {
-            gameBoardTiles[x][y] = new PyramidTile(config.getTileSize(), config.getBlankColor(), pieceAt(x, y));
-        } catch(Exception e) {
+            gameBoardTiles[positionX][positionY] = new PyramidTile(config.getTileSize(), config.getBlankColor(),
+                    pieceAt(positionX, positionY));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -100,40 +96,32 @@ public class PyramidModel extends Thread implements InterfaceModel {
     private boolean isComplement(int startX, int startY, int endX, int endY) {
         Tile startTile = gameBoardTiles[startX][startY];
         Tile endTile = gameBoardTiles[endX][endY];
-        if(startTile instanceof PyramidTile && endTile instanceof PyramidTile) {
+        if (startTile instanceof PyramidTile && endTile instanceof PyramidTile) {
             PyramidTile startPyramidTile = (PyramidTile) startTile;
             PyramidTile endPyramidTile = (PyramidTile) endTile;
-            if(startPyramidTile.getPyramidPiece().getCard().getEnumValue().getComplement()
-                    .equals(endPyramidTile.getPyramidPiece().getCard().getEnumValue())){
-                return true;
-            }
+            return startPyramidTile.getPyramidPiece().getCard().getEnumValue().getComplement().equals(endPyramidTile.getPyramidPiece().getCard().getEnumValue());
         }
         return false;
     }
 
     public boolean isValidMove(int startX, int startY, int endX, int endY) {
-        if(isPiece(endX, endY)) {
-            if(isComplement(startX, startY, endX, endY)) {
-                return true;
-            }
+        if (isPiece(endX, endY)) {
+            return isComplement(startX, startY, endX, endY);
         }
         return false;
     }
 
-    public boolean isPiece(int x, int y) {
-        if(gameBoardTiles[x][y] instanceof PyramidTile) {
-            return true;
-        }
-        return false;
+    public boolean isPiece(int positionX, int positionY) {
+        return gameBoardTiles[positionX][positionY] instanceof PyramidTile;
     }
 
-    public PyramidPiece pieceAt(int x, int y) {
-        Tile tile = gameBoardTiles[x][y];
-        if(tile instanceof PyramidTile) {
+    public PyramidPiece pieceAt(int positionX, int positionY) {
+        Tile tile = gameBoardTiles[positionX][positionY];
+        if (tile instanceof PyramidTile) {
             PyramidTile pyramidTile = (PyramidTile) tile;
             return pyramidTile.getPyramidPiece();
         }
-        throw new NullPointerException("Tile at " + x + ", " + y + " is not a PyramidTile");
+        throw new NullPointerException("Tile at " + positionX + ", " + positionY + " is not a PyramidTile");
     }
 
     public void doMove(int startX, int startY, int endX, int endY) {

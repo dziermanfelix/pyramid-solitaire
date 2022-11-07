@@ -17,8 +17,7 @@ public final class Config {
     private final Integer unturnedCardsY;
 
     public static Config getInstance() {
-        if (instance == null) return instance = new Config();
-
+        if (instance == null) instance = new Config();
         return instance;
     }
 
@@ -28,10 +27,8 @@ public final class Config {
         tileSize = new Size(65, 90);
         blankColor = Color.BLACK;
         highlightColor = Color.PINK;
-
         cardsInHandX = 1;
         cardsInHandY = 7;
-
         unturnedCardsX = 2;
         unturnedCardsY = 7;
     }
