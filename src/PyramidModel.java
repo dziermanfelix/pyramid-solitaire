@@ -1,30 +1,76 @@
+import edu.calpoly.spritely.SolidColorTile;
 import edu.calpoly.spritely.Tile;
 
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PyramidModel extends Thread implements InterfaceModel {
+    private final Config config = Config.getInstance();
+    private Tile[][] gameBoardTiles;
+    private final Deck deck = new Deck();
+    private final ArrayList<Card> turnedCards = new ArrayList<>();
     private int startX;
     private int startY;
-    private final PyramidBoardPieceInit pyramidBoardPiece = new PyramidBoardPieceInit();
-    private final Tile[][] gameBoardTiles;
     private final InterfaceMoveState preMoveState;
     private final InterfaceMoveState moveState;
     private InterfaceMoveState currentState;
     private ArrayList<InterfaceView> observers = new ArrayList<>();
     private final ReentrantLock lock = new ReentrantLock();
-    private final Config config = Config.getInstance();
 
     public PyramidModel() {
         preMoveState = new PyramidStatePreMove(this);
         moveState = new PyramidStateMove(this);
         currentState = preMoveState;
-        gameBoardTiles = pyramidBoardPiece.getPyramidTiles();
+        initBoard();
     }
 
     @Override public void run() {
         PyramidView v = new PyramidView(this);
         v.start();
+    }
+
+    private void initBoard() {
+        // init pyramid tiles array
+        gameBoardTiles = new Tile[config.getTileX()][config.getTileY()];
+        // start with all blank tiles
+        for (int x = 0; x < config.getTileX(); x++) {
+            for (int y = 0; y < config.getTileY(); y++) {
+                gameBoardTiles[x][y] = new SolidColorTile(Color.BLACK, '.');
+            }
+        }
+        addGamePieces();
+        addDeckAndTurnedPieces();
+    }
+
+    protected void addGamePieces() {
+        Common.debugPrint("OG DECK");
+        deck.printDeck();
+        List<BoardPosition> boardPositions = EnumPosition.getBoardPositions();
+        for (BoardPosition position : boardPositions) {
+            Card card = deck.getNextCard();
+            PyramidPiece piece = new PyramidPiece(card, position);
+            gameBoardTiles[position.getPositionX()][position.getPositionY()] = PyramidTile.createPyramidTile(piece);
+            Common.debugPrint("Adding: " + card + " to " + position);
+        }
+        Common.debugPrint("GAME PLAYING DECK");
+        deck.printDeck();
+    }
+
+    protected void addDeckAndTurnedPieces() {
+        turnedCards.add(deck.getBackOfDeck());
+
+        BoardPosition deckPosition = EnumPosition.DECK.getPosition();
+        Card deckCard = deck.getBackOfDeck();
+        PyramidPiece deckPiece = new PyramidPiece(deckCard, deckPosition);
+        gameBoardTiles[deckPosition.getPositionX()][deckPosition.getPositionY()] =
+                PyramidTile.createPyramidTile(deckPiece);
+        BoardPosition turnedPosition = EnumPosition.TURNED.getPosition();
+        Card turnedCard = deck.getNextCard();
+        turnedCards.add(turnedCard);
+        PyramidPiece seenPiece = new PyramidPiece(turnedCard, turnedPosition);
+        gameBoardTiles[turnedPosition.getPositionX()][turnedPosition.getPositionY()] = PyramidTile.createPyramidTile(seenPiece);
     }
 
     public void receiveClick(int mouseX, int mouseY) {
@@ -104,9 +150,20 @@ public class PyramidModel extends Thread implements InterfaceModel {
         Common.debugPrint("Start: " + pieceAt(startX, startY));
         Common.debugPrint("End: " + pieceAt(endX, endY));
         if (isPiece(endX, endY)) {
+            if (startX == endX && startY == endY) {
+                return isDeckPosition(startX, startY, endX, endY) || isKing(startX, startY, endX, endY);
+            }
             return isComplement(startX, startY, endX, endY);
         }
         return false;
+    }
+
+    private boolean isDeckPosition(int startX, int startY, int endX, int endY) {
+        return startX == config.getDeckX() && startY == config.getDeckY();
+    }
+
+    private boolean isKing(int startX, int startY, int endX, int endY) {
+        return pieceAt(startX, startY).getCard().getEnumValue().equals(EnumValue.KING);
     }
 
     public PyramidPiece pieceAt(int positionX, int positionY) {
@@ -122,8 +179,27 @@ public class PyramidModel extends Thread implements InterfaceModel {
     }
 
     public void doMove(int startX, int startY, int endX, int endY) {
-        gameBoardTiles[endX][endY] = pyramidBoardPiece.generateBlankTile();
-        gameBoardTiles[startX][startY] = pyramidBoardPiece.generateBlankTile();
+        if (isDeckPosition(startX, startY, endX, endY)) {
+            Card newCard = deck.getNextCard();
+            turnedCards.add(newCard);
+        } else if (isTurnedCardPosition(startX, startY, endX, endY)) {
+            turnedCards.remove(turnedCards.size() - 1);
+            gameBoardTiles[endX][endY] = PyramidTile.generateBlankTile();
+            gameBoardTiles[startX][startY] = PyramidTile.generateBlankTile();
+        } else {
+            gameBoardTiles[endX][endY] = PyramidTile.generateBlankTile();
+            gameBoardTiles[startX][startY] = PyramidTile.generateBlankTile();
+        }
+        // stack turned cards
+        for (Card card : turnedCards) {
+            Common.debugPrint("Adding Turned Card: " + card);
+            PyramidPiece newCardPiece = new PyramidPiece(card, new BoardPosition(config.getTurnedX(), config.getTurnedY()));
+            gameBoardTiles[config.getTurnedX()][config.getTurnedY()] = PyramidTile.createPyramidTile(newCardPiece);
+        }
+    }
+
+    private boolean isTurnedCardPosition(int startX, int startY, int endX, int endY) {
+        return (startX == config.getTurnedX() && startY == config.getTurnedY()) || (endX == config.getTurnedX() && endY == config.getTurnedY());
     }
 
     public InterfaceMoveState getPreMoveState() {

@@ -67,7 +67,7 @@ public class Deck extends ArrayList<Card> {
         this.add(new Card(EnumSuit.DIAMONDS, EnumValue.KING, new File("data/images/KD.png")));
     }
 
-    public Card getUnseenCard() {
+    public Card getBackOfDeck() {
         return new Card(EnumSuit.NONE, EnumValue.NONE, new File("data/images/red_back.png"));
     }
 
@@ -83,5 +83,9 @@ public class Deck extends ArrayList<Card> {
         for (Card c : this) {
             Common.debugPrint("\t" + c);
         }
+    }
+
+    public Card getNextCard() {
+        return this.remove(0);
     }
 }

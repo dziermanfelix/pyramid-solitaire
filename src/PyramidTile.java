@@ -1,5 +1,6 @@
 import edu.calpoly.spritely.ImageTile;
 import edu.calpoly.spritely.Size;
+import edu.calpoly.spritely.SolidColorTile;
 
 import java.awt.*;
 import java.io.IOException;
@@ -35,5 +36,9 @@ public class PyramidTile extends ImageTile {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static SolidColorTile generateBlankTile() {
+        return new SolidColorTile(Color.BLACK, '.');
     }
 }

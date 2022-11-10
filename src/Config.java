@@ -9,10 +9,10 @@ public final class Config {
     private final Size tileSize;
     private final Color blankColor;
     private final Color highlightColor;
-    private final Integer cardsInHandX;
-    private final Integer cardsInHandY;
-    private final Integer unturnedCardsX;
-    private final Integer unturnedCardsY;
+    private final Integer deckX;
+    private final Integer deckY;
+    private final Integer turnedX;
+    private final Integer turnedY;
 
     public static Config getInstance() {
         if (instance == null) instance = new Config();
@@ -25,10 +25,10 @@ public final class Config {
         tileSize = new Size(80, 105);
         blankColor = Color.BLACK;
         highlightColor = Color.GREEN;
-        cardsInHandX = 5;
-        cardsInHandY = 7;
-        unturnedCardsX = 7;
-        unturnedCardsY = 7;
+        deckX = 5;
+        deckY = 7;
+        turnedX = 7;
+        turnedY = 7;
     }
 
     public int getTileX() {
@@ -51,19 +51,19 @@ public final class Config {
         return highlightColor;
     }
 
-    public Integer getCardsInHandX() {
-        return cardsInHandX;
+    public Integer getDeckX() {
+        return deckX;
     }
 
-    public Integer getCardsInHandY() {
-        return cardsInHandY;
+    public Integer getDeckY() {
+        return deckY;
     }
 
-    public Integer getUnturnedCardsX() {
-        return unturnedCardsX;
+    public Integer getTurnedX() {
+        return turnedX;
     }
 
-    public Integer getUnturnedCardsY() {
-        return unturnedCardsY;
+    public Integer getTurnedY() {
+        return turnedY;
     }
 }
