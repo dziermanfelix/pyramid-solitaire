@@ -1,16 +1,18 @@
 public enum EnumSuit {
-    SPADES, HEARTS, DIAMONDS, CLUBS;
+    SPADES, HEARTS, DIAMONDS, CLUBS, NONE;
 
     public String toString() {
         switch (this) {
             case SPADES:
-                return "S";
+                return "SPADES";
             case HEARTS:
-                return "H";
+                return "HEARTS";
             case DIAMONDS:
-                return "D";
+                return "DIAMONDS";
             case CLUBS:
-                return "C";
+                return "CLUBS";
+            case NONE:
+                return "NONE";
             default:
                 throw new IllegalArgumentException();
         }

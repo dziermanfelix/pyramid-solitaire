@@ -19,4 +19,8 @@ public class PyramidPiece {
     public char getPyramidPieceCharacter() {
         return pyramidPieceCharacter;
     }
+
+    @Override public String toString() {
+        return card + "@" + boardPosition;
+    }
 }

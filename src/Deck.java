@@ -1,12 +1,15 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Deck extends ArrayList<Card> {
     public Deck() {
-        makeDeck();
+        freshDeck();
+        shuffleDeck();
     }
 
-    public void makeDeck() {
+    public void freshDeck() {
+        // clubs
         this.add(new Card(EnumSuit.CLUBS, EnumValue.ACE, new File("data/images/AC.png")));
         this.add(new Card(EnumSuit.CLUBS, EnumValue.TWO, new File("data/images/2C.png")));
         this.add(new Card(EnumSuit.CLUBS, EnumValue.THREE, new File("data/images/3C.png")));
@@ -20,7 +23,7 @@ public class Deck extends ArrayList<Card> {
         this.add(new Card(EnumSuit.CLUBS, EnumValue.JACK, new File("data/images/JC.png")));
         this.add(new Card(EnumSuit.CLUBS, EnumValue.QUEEN, new File("data/images/QC.png")));
         this.add(new Card(EnumSuit.CLUBS, EnumValue.KING, new File("data/images/KC.png")));
-
+        // hearts
         this.add(new Card(EnumSuit.HEARTS, EnumValue.ACE, new File("data/images/AH.png")));
         this.add(new Card(EnumSuit.HEARTS, EnumValue.TWO, new File("data/images/2H.png")));
         this.add(new Card(EnumSuit.HEARTS, EnumValue.THREE, new File("data/images/3H.png")));
@@ -34,7 +37,7 @@ public class Deck extends ArrayList<Card> {
         this.add(new Card(EnumSuit.HEARTS, EnumValue.JACK, new File("data/images/JH.png")));
         this.add(new Card(EnumSuit.HEARTS, EnumValue.QUEEN, new File("data/images/QH.png")));
         this.add(new Card(EnumSuit.HEARTS, EnumValue.KING, new File("data/images/KH.png")));
-
+        // spades
         this.add(new Card(EnumSuit.SPADES, EnumValue.ACE, new File("data/images/AS.png")));
         this.add(new Card(EnumSuit.SPADES, EnumValue.TWO, new File("data/images/2S.png")));
         this.add(new Card(EnumSuit.SPADES, EnumValue.THREE, new File("data/images/3S.png")));
@@ -48,7 +51,7 @@ public class Deck extends ArrayList<Card> {
         this.add(new Card(EnumSuit.SPADES, EnumValue.JACK, new File("data/images/JS.png")));
         this.add(new Card(EnumSuit.SPADES, EnumValue.QUEEN, new File("data/images/QS.png")));
         this.add(new Card(EnumSuit.SPADES, EnumValue.KING, new File("data/images/KS.png")));
-
+        // diamonds
         this.add(new Card(EnumSuit.DIAMONDS, EnumValue.ACE, new File("data/images/AD.png")));
         this.add(new Card(EnumSuit.DIAMONDS, EnumValue.TWO, new File("data/images/2D.png")));
         this.add(new Card(EnumSuit.DIAMONDS, EnumValue.THREE, new File("data/images/3D.png")));
@@ -62,5 +65,23 @@ public class Deck extends ArrayList<Card> {
         this.add(new Card(EnumSuit.DIAMONDS, EnumValue.JACK, new File("data/images/JD.png")));
         this.add(new Card(EnumSuit.DIAMONDS, EnumValue.QUEEN, new File("data/images/QD.png")));
         this.add(new Card(EnumSuit.DIAMONDS, EnumValue.KING, new File("data/images/KD.png")));
+    }
+
+    public Card getUnseenCard() {
+        return new Card(EnumSuit.NONE, EnumValue.NONE, new File("data/images/red_back.png"));
+    }
+
+    private void shuffleDeck() {
+        Collections.shuffle(this);
+        Collections.shuffle(this);
+        Collections.shuffle(this);
+        Collections.shuffle(this);
+    }
+
+    public void printDeck() {
+        Common.debugPrint("PRINTING THE DECK:");
+        for (Card c : this) {
+            Common.debugPrint("\t" + c);
+        }
     }
 }

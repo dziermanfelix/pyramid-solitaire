@@ -1,5 +1,5 @@
 public enum EnumValue {
-    TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE;
+    TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE, NONE;
 
     public EnumValue getComplement() {
         switch (this) {
@@ -37,31 +37,33 @@ public enum EnumValue {
     public String toString() {
         switch (this) {
             case TWO:
-                return "02";
+                return "TWO";
             case THREE:
-                return "03";
+                return "THREE";
             case FOUR:
-                return "04";
+                return "FOUR";
             case FIVE:
-                return "05";
+                return "FIVE";
             case SIX:
-                return "06";
+                return "SIX";
             case SEVEN:
-                return "07";
+                return "SEVEN";
             case EIGHT:
-                return "08";
+                return "EIGHT";
             case NINE:
-                return "09";
+                return "NINE";
             case TEN:
-                return "10";
+                return "TEN";
             case JACK:
-                return "JK";
+                return "JACK";
             case QUEEN:
-                return "QN";
+                return "QUEEN";
             case KING:
-                return "KG";
+                return "KING";
             case ACE:
-                return "AC";
+                return "ACE";
+            case NONE:
+                return "NONE";
             default:
                 return null;
         }

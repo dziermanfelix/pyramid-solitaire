@@ -27,4 +27,13 @@ public class PyramidTile extends ImageTile {
     public PyramidPiece getPyramidPiece() {
         return pyramidPiece;
     }
+
+    public static PyramidTile createPyramidTile(PyramidPiece pyramidPiece) {
+        try {
+            return new PyramidTile(Config.getInstance().getTileSize(), Color.BLACK, pyramidPiece);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

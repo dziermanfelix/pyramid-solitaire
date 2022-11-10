@@ -1,7 +1,11 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public enum EnumPosition {
     ZERO_ZERO, ONE_ZERO, ONE_ONE, TWO_ZERO, TWO_ONE, TWO_TWO, THREE_ZERO, THREE_ONE, THREE_TWO, THREE_THREE, FOUR_ZERO,
     FOUR_ONE, FOUR_TWO, FOUR_THREE, FOUR_FOUR, FIVE_ZERO, FIVE_ONE, FIVE_TWO, FIVE_THREE, FIVE_FOUR, FIVE_FIVE, SIX_ZERO,
-    SIX_ONE, SIX_TWO, SIX_THREE, SIX_FOUR, SIX_FIVE, SIX_SIX, OFF;
+    SIX_ONE, SIX_TWO, SIX_THREE, SIX_FOUR, SIX_FIVE, SIX_SIX, UNSEEN, SEEN;
 
     private final Config config = Config.getInstance();
 
@@ -63,10 +67,20 @@ public enum EnumPosition {
                 return new BoardPosition(10, 6);
             case SIX_SIX:
                 return new BoardPosition(12, 6);
-            case OFF:
+            case UNSEEN:
                 return new BoardPosition(config.getCardsInHandX(), config.getCardsInHandY());
+            case SEEN:
+                return new BoardPosition(config.getUnturnedCardsX(), config.getUnturnedCardsY());
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    public static List<BoardPosition> getBoardPositions() {
+        List<BoardPosition> boardPositions = new ArrayList<>();
+        for (EnumPosition enumPosition : EnumPosition.values()) {
+            if (!enumPosition.equals(UNSEEN) && !enumPosition.equals(SEEN)) boardPositions.add(enumPosition.getPosition());
+        }
+        return boardPositions;
     }
 }

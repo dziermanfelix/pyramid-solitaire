@@ -30,6 +30,6 @@ public class Card {
     }
 
     @Override public String toString() {
-        return enumSuit + "" + enumValue;
+        return enumSuit + "-" + enumValue;
     }
 }

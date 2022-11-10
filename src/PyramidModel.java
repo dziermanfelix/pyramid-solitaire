@@ -14,16 +14,12 @@ public class PyramidModel extends Thread implements InterfaceModel {
     private ArrayList<InterfaceView> observers = new ArrayList<>();
     private final ReentrantLock lock = new ReentrantLock();
     private final Config config = Config.getInstance();
-    private final ArrayList<PyramidPiece> cards;
-    private final ArrayList<PyramidPiece> cardsInHand;
 
     public PyramidModel() {
         preMoveState = new PyramidStatePreMove(this);
         moveState = new PyramidStateMove(this);
         currentState = preMoveState;
         gameBoardTiles = pyramidBoardPiece.getPyramidTiles();
-        cards = pyramidBoardPiece.getPieceList();
-        cardsInHand = pyramidBoardPiece.getCardsInHand();
     }
 
     @Override public void run() {
@@ -105,23 +101,24 @@ public class PyramidModel extends Thread implements InterfaceModel {
     }
 
     public boolean isValidMove(int startX, int startY, int endX, int endY) {
+        Common.debugPrint("Start: " + pieceAt(startX, startY));
+        Common.debugPrint("End: " + pieceAt(endX, endY));
         if (isPiece(endX, endY)) {
             return isComplement(startX, startY, endX, endY);
         }
         return false;
     }
 
-    public boolean isPiece(int positionX, int positionY) {
-        return gameBoardTiles[positionX][positionY] instanceof PyramidTile;
-    }
-
     public PyramidPiece pieceAt(int positionX, int positionY) {
-        Tile tile = gameBoardTiles[positionX][positionY];
-        if (tile instanceof PyramidTile) {
-            PyramidTile pyramidTile = (PyramidTile) tile;
+        if (isPiece(positionX, positionY)) {
+            PyramidTile pyramidTile = (PyramidTile) gameBoardTiles[positionX][positionY];
             return pyramidTile.getPyramidPiece();
         }
         throw new NullPointerException("Tile at " + positionX + ", " + positionY + " is not a PyramidTile");
+    }
+
+    public boolean isPiece(int positionX, int positionY) {
+        return gameBoardTiles[positionX][positionY] instanceof PyramidTile;
     }
 
     public void doMove(int startX, int startY, int endX, int endY) {
@@ -166,27 +163,5 @@ public class PyramidModel extends Thread implements InterfaceModel {
             lock.unlock();
         }
         return newArray;
-    }
-
-    public ArrayList<PyramidPiece> getCardsInHand() {
-        ArrayList<PyramidPiece> newList;
-        lock.lock();
-        try {
-            newList = new ArrayList<>(cardsInHand);
-        } finally {
-            lock.unlock();
-        }
-        return newList;
-    }
-
-    public ArrayList<PyramidPiece> getCards() {
-        ArrayList<PyramidPiece> newList;
-        lock.lock();
-        try {
-            newList = new ArrayList<>(cards);
-        } finally {
-            lock.unlock();
-        }
-        return newList;
     }
 }

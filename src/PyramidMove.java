@@ -48,15 +48,15 @@ public class PyramidMove {
         }
 
         PyramidMove move = (PyramidMove) obj;
-        int moveStartX = move.start.getX();
-        int moveStartY = move.start.getY();
-        int moveEndX = move.end.getX();
-        int moveEndY = move.end.getY();
+        int moveStartX = move.start.getPositionX();
+        int moveStartY = move.start.getPositionY();
+        int moveEndX = move.end.getPositionX();
+        int moveEndY = move.end.getPositionY();
 
-        int thisStartX = this.start.getX();
-        int thisStartY = this.start.getY();
-        int thisEndX = this.end.getX();
-        int thisEndY = this.end.getY();
+        int thisStartX = this.start.getPositionX();
+        int thisStartY = this.start.getPositionY();
+        int thisEndX = this.end.getPositionX();
+        int thisEndY = this.end.getPositionY();
 
         return moveStartX == thisStartX && moveStartY == thisStartY
                 && moveEndX == thisEndX && moveEndY == thisEndY;

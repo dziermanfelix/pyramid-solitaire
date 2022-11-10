@@ -9,10 +9,8 @@ public final class Config {
     private final Size tileSize;
     private final Color blankColor;
     private final Color highlightColor;
-
     private final Integer cardsInHandX;
     private final Integer cardsInHandY;
-
     private final Integer unturnedCardsX;
     private final Integer unturnedCardsY;
 
@@ -24,12 +22,12 @@ public final class Config {
     private Config() {
         tileX = 13;
         tileY = 8;
-        tileSize = new Size(65, 90);
+        tileSize = new Size(80, 105);
         blankColor = Color.BLACK;
-        highlightColor = Color.PINK;
-        cardsInHandX = 1;
+        highlightColor = Color.GREEN;
+        cardsInHandX = 5;
         cardsInHandY = 7;
-        unturnedCardsX = 2;
+        unturnedCardsX = 7;
         unturnedCardsY = 7;
     }
 

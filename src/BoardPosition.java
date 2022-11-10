@@ -1,37 +1,34 @@
 import java.util.Objects;
 
 public class BoardPosition {
-    private int x;
-    private int y;
+    private final int positionX;
+    private final int positionY;
 
-    public BoardPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public BoardPosition(int positionX, int positionY) {
+        this.positionX = positionX;
+        this.positionY = positionY;
     }
 
     @Override public int hashCode() {
-        return Objects.hash(x, y);
+        return Objects.hash(positionX, positionY);
     }
 
     @Override public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-
-        if (!(obj instanceof BoardPosition)) {
-            return false;
-        }
-
+        if (obj == this) return true;
+        if (!(obj instanceof BoardPosition)) return false;
         BoardPosition move = (BoardPosition) obj;
-
-        return this.x == move.getX() && this.y == move.getY();
+        return this.positionX == move.getPositionX() && this.positionY == move.getPositionY();
     }
 
-    public int getX() {
-        return x;
+    public int getPositionX() {
+        return positionX;
     }
 
-    public int getY() {
-        return y;
+    public int getPositionY() {
+        return positionY;
+    }
+
+    @Override public String toString() {
+        return "[" + positionX + "," + positionY + "]";
     }
 }

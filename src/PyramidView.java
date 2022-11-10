@@ -1,7 +1,5 @@
 import edu.calpoly.spritely.*;
 
-import java.awt.*;
-
 public class PyramidView extends Thread implements InterfaceView {
     private final Config config = Config.getInstance();
     private final PyramidModel pyramidModel;
@@ -35,15 +33,6 @@ public class PyramidView extends Thread implements InterfaceView {
             for (int y = 0; y < config.getTileY(); y++) {
                 frame.addTile(x, y, gameBoardTiles[x][y]);
             }
-        }
-        try {
-            PyramidPiece p = pyramidModel.getCardsInHand().get(0);
-            frame.addTile(config.getCardsInHandX(), config.getCardsInHandY(), new PyramidTile(config.getTileSize(),
-                    Color.BLACK, p));
-            frame.addTile(config.getUnturnedCardsX(), config.getUnturnedCardsY(), new PyramidTile(config.getTileSize(),
-                    Color.BLACK, p));
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
