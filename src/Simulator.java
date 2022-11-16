@@ -3,6 +3,6 @@ public class Simulator {
     PyramidView pyramidView = new PyramidView(pyramidModel);
 
     public Simulator() {
-        pyramidModel.start();
+        pyramidModel.run();
     }
 }

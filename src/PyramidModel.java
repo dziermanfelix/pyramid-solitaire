@@ -2,22 +2,19 @@ import edu.calpoly.spritely.SolidColorTile;
 import edu.calpoly.spritely.Tile;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class PyramidModel extends Thread implements InterfaceModel {
+public class PyramidModel extends AbstractModel implements Runnable, InterfaceModel {
     private final Config config = Config.getInstance();
     private Tile[][] gameBoardTiles;
-    private final Deck deck = new Deck();
-    private final ArrayList<Card> turnedCards = new ArrayList<>();
     private int startX;
     private int startY;
     private final InterfaceMoveState preMoveState;
     private final InterfaceMoveState moveState;
     private InterfaceMoveState currentState;
-    private ArrayList<InterfaceView> observers = new ArrayList<>();
     private final ReentrantLock lock = new ReentrantLock();
+    private final CardManager cardManager = new CardManager();
 
     public PyramidModel() {
         preMoveState = new PyramidStatePreMove(this);
@@ -45,30 +42,24 @@ public class PyramidModel extends Thread implements InterfaceModel {
     }
 
     protected void addGamePieces() {
-        Common.debugPrint("OG DECK");
-        deck.printDeck();
         List<BoardPosition> boardPositions = EnumPosition.getBoardPositions();
         for (BoardPosition position : boardPositions) {
-            Card card = deck.getNextCard();
+            Card card = cardManager.getDeck().getNextCard();
             PyramidPiece piece = new PyramidPiece(card, position);
             gameBoardTiles[position.getPositionX()][position.getPositionY()] = PyramidTile.createPyramidTile(piece);
             Common.debugPrint("Adding: " + card + " to " + position);
         }
-        Common.debugPrint("GAME PLAYING DECK");
-        deck.printDeck();
     }
 
     protected void addDeckAndTurnedPieces() {
-        turnedCards.add(deck.getBackOfDeck());
-
         BoardPosition deckPosition = EnumPosition.DECK.getPosition();
-        Card deckCard = deck.getBackOfDeck();
+        Card deckCard = cardManager.getDeck().getBackOfDeck();
         PyramidPiece deckPiece = new PyramidPiece(deckCard, deckPosition);
         gameBoardTiles[deckPosition.getPositionX()][deckPosition.getPositionY()] =
                 PyramidTile.createPyramidTile(deckPiece);
         BoardPosition turnedPosition = EnumPosition.TURNED.getPosition();
-        Card turnedCard = deck.getNextCard();
-        turnedCards.add(turnedCard);
+        Card turnedCard = cardManager.getDeck().getNextCard();
+        cardManager.getTurnedCards().add(turnedCard);
         PyramidPiece seenPiece = new PyramidPiece(turnedCard, turnedPosition);
         gameBoardTiles[turnedPosition.getPositionX()][turnedPosition.getPositionY()] = PyramidTile.createPyramidTile(seenPiece);
     }
@@ -76,45 +67,6 @@ public class PyramidModel extends Thread implements InterfaceModel {
     public void receiveClick(int mouseX, int mouseY) {
         currentState.receiveClick(mouseX, mouseY);
         changeOccurred();
-    }
-
-    @Override public void addObserver(InterfaceView observer) {
-        lock.lock();
-        try {
-            ArrayList<InterfaceView> newList = new ArrayList<>(observers);
-            newList.add(observer);
-            observers = newList;
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    @Override public void removeObserver(InterfaceView observer) {
-        lock.lock();
-        try {
-            ArrayList<InterfaceView> newList = new ArrayList<>(observers);
-            newList.remove(observer);
-            observers = newList;
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public void changeOccurred() {
-        notifyObservers();
-    }
-
-    @Override public void notifyObservers() {
-        ArrayList<InterfaceView> newList;
-        lock.lock();
-        try {
-            newList = new ArrayList<>(observers);
-        } finally {
-            lock.unlock();
-        }
-        for (InterfaceView o : newList) {
-            o.update();
-        }
     }
 
     public void highlightTile(int positionX, int positionY) {
@@ -180,22 +132,20 @@ public class PyramidModel extends Thread implements InterfaceModel {
 
     public void doMove(int startX, int startY, int endX, int endY) {
         if (isDeckPosition(startX, startY, endX, endY)) {
-            Card newCard = deck.getNextCard();
-            turnedCards.add(newCard);
+            Card newCard = cardManager.getDeck().getNextCard();
+            cardManager.getTurnedCards().add(newCard);
         } else if (isTurnedCardPosition(startX, startY, endX, endY)) {
-            turnedCards.remove(turnedCards.size() - 1);
+            cardManager.getTurnedCards().remove(cardManager.getTurnedCards().size() - 1);
             gameBoardTiles[endX][endY] = PyramidTile.generateBlankTile();
             gameBoardTiles[startX][startY] = PyramidTile.generateBlankTile();
         } else {
             gameBoardTiles[endX][endY] = PyramidTile.generateBlankTile();
             gameBoardTiles[startX][startY] = PyramidTile.generateBlankTile();
         }
-        // stack turned cards
-        for (Card card : turnedCards) {
-            Common.debugPrint("Adding Turned Card: " + card);
-            PyramidPiece newCardPiece = new PyramidPiece(card, new BoardPosition(config.getTurnedX(), config.getTurnedY()));
-            gameBoardTiles[config.getTurnedX()][config.getTurnedY()] = PyramidTile.createPyramidTile(newCardPiece);
-        }
+        // add turned card
+        Card card = cardManager.getTurnedCards().get(cardManager.getTurnedCards().size() - 1);
+        PyramidPiece newCardPiece = new PyramidPiece(card, new BoardPosition(config.getTurnedX(), config.getTurnedY()));
+        gameBoardTiles[config.getTurnedX()][config.getTurnedY()] = PyramidTile.createPyramidTile(newCardPiece);
     }
 
     private boolean isTurnedCardPosition(int startX, int startY, int endX, int endY) {
