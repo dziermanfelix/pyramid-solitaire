@@ -9,13 +9,17 @@ public class BoardPosition {
         this.positionY = positionY;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return Objects.hash(positionX, positionY);
     }
 
-    @Override public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (!(obj instanceof BoardPosition)) return false;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+        if (!(obj instanceof BoardPosition))
+            return false;
         BoardPosition move = (BoardPosition) obj;
         return this.positionX == move.getPositionX() && this.positionY == move.getPositionY();
     }
@@ -28,7 +32,8 @@ public class BoardPosition {
         return positionY;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "[" + positionX + "," + positionY + "]";
     }
 }

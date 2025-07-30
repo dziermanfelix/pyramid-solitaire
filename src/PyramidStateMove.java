@@ -5,7 +5,8 @@ public class PyramidStateMove implements InterfaceMoveState {
         this.pyramidModel = pyramidModel;
     }
 
-    @Override public void receiveClick(int clickX, int clickY) {
+    @Override
+    public void receiveClick(int clickX, int clickY) {
         int startX = pyramidModel.getStartX();
         int startY = pyramidModel.getStartY();
         // if valid move, do move, reset move either way

@@ -20,7 +20,8 @@ public class PyramidPiece {
         return pyramidPieceCharacter;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return card + "@" + boardPosition;
     }
 }

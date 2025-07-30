@@ -39,11 +39,11 @@ public class PyramidMove {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == this) {
+        if (obj == this) {
             return true;
         }
 
-        if(!(obj instanceof BoardPosition)) {
+        if (!(obj instanceof BoardPosition)) {
             return false;
         }
 
@@ -58,7 +58,7 @@ public class PyramidMove {
         int thisEndX = this.end.getPositionX();
         int thisEndY = this.end.getPositionY();
 
-        return moveStartX == thisStartX && moveStartY == thisStartY
-                && moveEndX == thisEndX && moveEndY == thisEndY;
+        return moveStartX == thisStartX && moveStartY == thisStartY && moveEndX == thisEndX
+                && moveEndY == thisEndY;
     }
 }

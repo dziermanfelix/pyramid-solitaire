@@ -29,7 +29,8 @@ public class Card {
         return file;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return enumSuit + "-" + enumValue;
     }
 }

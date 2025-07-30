@@ -5,7 +5,8 @@ public class AbstractModel implements InterfaceModel {
     private ArrayList<InterfaceView> observers = new ArrayList<>();
     private final ReentrantLock lock = new ReentrantLock();
 
-    @Override public void addObserver(InterfaceView observer) {
+    @Override
+    public void addObserver(InterfaceView observer) {
         lock.lock();
         try {
             ArrayList<InterfaceView> newList = new ArrayList<>(observers);
@@ -16,7 +17,8 @@ public class AbstractModel implements InterfaceModel {
         }
     }
 
-    @Override public void removeObserver(InterfaceView observer) {
+    @Override
+    public void removeObserver(InterfaceView observer) {
         lock.lock();
         try {
             ArrayList<InterfaceView> newList = new ArrayList<>(observers);
@@ -31,7 +33,8 @@ public class AbstractModel implements InterfaceModel {
         notifyObservers();
     }
 
-    @Override public void notifyObservers() {
+    @Override
+    public void notifyObservers() {
         ArrayList<InterfaceView> newList;
         lock.lock();
         try {

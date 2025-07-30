@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Main",
+      "request": "launch",
+      "mainClass": "Main",
+      "projectName": "pyramid-solitaire_18af9e05"
+    },
+    {
+      "type": "java",
+      "name": "Run Pyramid Solitaire",
+      "request": "launch",
+      "mainClass": "Main",
+      "projectName": "pyramin-solitaire"
+    }
+  ]
+}

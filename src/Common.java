@@ -2,7 +2,8 @@ public final class Common {
     private static Common instance;
 
     public static Common getInstance() {
-        if (instance == null) instance = new Common();
+        if (instance == null)
+            instance = new Common();
         return instance;
     }
 

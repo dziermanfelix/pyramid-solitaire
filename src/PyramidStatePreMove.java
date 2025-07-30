@@ -8,7 +8,8 @@ public class PyramidStatePreMove implements InterfaceMoveState {
         this.pyramidModel = pyramidModel;
     }
 
-    @Override public void receiveClick(int clickX, int clickY) {
+    @Override
+    public void receiveClick(int clickX, int clickY) {
         this.clickX = clickX;
         this.clickY = clickY;
         validatePiece();

@@ -5,30 +5,32 @@ import java.awt.Color;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class PyramidModel extends AbstractModel implements Runnable, InterfaceModel {
+public class PyramidModel extends AbstractModel implements Runnable {
     private final Config config = Config.getInstance();
+    private final ReentrantLock lock = new ReentrantLock();
+    private final PyramidPieceManager pyramidPieceManager;
     private Tile[][] gameBoardTiles;
     private int startX;
     private int startY;
     private final InterfaceMoveState preMoveState;
     private final InterfaceMoveState moveState;
     private InterfaceMoveState currentState;
-    private final ReentrantLock lock = new ReentrantLock();
-    private final CardManager cardManager = new CardManager();
 
     public PyramidModel() {
         preMoveState = new PyramidStatePreMove(this);
         moveState = new PyramidStateMove(this);
         currentState = preMoveState;
-        initBoard();
+        pyramidPieceManager = new PyramidPieceManager();
+        initializeBoard();
     }
 
-    @Override public void run() {
+    @Override
+    public void run() {
         PyramidView v = new PyramidView(this);
         v.start();
     }
 
-    private void initBoard() {
+    private void initializeBoard() {
         // init pyramid tiles array
         gameBoardTiles = new Tile[config.getTileX()][config.getTileY()];
         // start with all blank tiles
@@ -43,25 +45,26 @@ public class PyramidModel extends AbstractModel implements Runnable, InterfaceMo
 
     protected void addGamePieces() {
         List<BoardPosition> boardPositions = EnumPosition.getBoardPositions();
-        for (BoardPosition position : boardPositions) {
-            Card card = cardManager.getDeck().getNextCard();
-            PyramidPiece piece = new PyramidPiece(card, position);
-            gameBoardTiles[position.getPositionX()][position.getPositionY()] = PyramidTile.createPyramidTile(piece);
-            Common.debugPrint("Adding: " + card + " to " + position);
+        for (BoardPosition boardPosition : boardPositions) {
+            PyramidPiece piece =
+                    new PyramidPiece(pyramidPieceManager.getDeck().getNextCard(), boardPosition);
+            gameBoardTiles[boardPosition.getPositionX()][boardPosition.getPositionY()] =
+                    PyramidTile.createPyramidTile(piece);
         }
     }
 
     protected void addDeckAndTurnedPieces() {
         BoardPosition deckPosition = EnumPosition.DECK.getPosition();
-        Card deckCard = cardManager.getDeck().getBackOfDeck();
+        Card deckCard = pyramidPieceManager.getDeck().getBackOfDeck();
         PyramidPiece deckPiece = new PyramidPiece(deckCard, deckPosition);
         gameBoardTiles[deckPosition.getPositionX()][deckPosition.getPositionY()] =
                 PyramidTile.createPyramidTile(deckPiece);
         BoardPosition turnedPosition = EnumPosition.TURNED.getPosition();
-        Card turnedCard = cardManager.getDeck().getNextCard();
-        cardManager.getTurnedCards().add(turnedCard);
+        Card turnedCard = pyramidPieceManager.getDeck().getNextCard();
+        pyramidPieceManager.getTurnedCards().add(turnedCard);
         PyramidPiece seenPiece = new PyramidPiece(turnedCard, turnedPosition);
-        gameBoardTiles[turnedPosition.getPositionX()][turnedPosition.getPositionY()] = PyramidTile.createPyramidTile(seenPiece);
+        gameBoardTiles[turnedPosition.getPositionX()][turnedPosition.getPositionY()] =
+                PyramidTile.createPyramidTile(seenPiece);
     }
 
     public void receiveClick(int mouseX, int mouseY) {
@@ -71,8 +74,8 @@ public class PyramidModel extends AbstractModel implements Runnable, InterfaceMo
 
     public void highlightTile(int positionX, int positionY) {
         try {
-            gameBoardTiles[positionX][positionY] = new PyramidTile(config.getTileSize(), config.getHighlightColor(),
-                    pieceAt(positionX, positionY));
+            gameBoardTiles[positionX][positionY] = new PyramidTile(config.getTileSize(),
+                    config.getHighlightColor(), pieceAt(positionX, positionY));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,8 +83,8 @@ public class PyramidModel extends AbstractModel implements Runnable, InterfaceMo
 
     public void unHighlightTile(int positionX, int positionY) {
         try {
-            gameBoardTiles[positionX][positionY] = new PyramidTile(config.getTileSize(), config.getBlankColor(),
-                    pieceAt(positionX, positionY));
+            gameBoardTiles[positionX][positionY] = new PyramidTile(config.getTileSize(),
+                    config.getBlankColor(), pieceAt(positionX, positionY));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,17 +96,23 @@ public class PyramidModel extends AbstractModel implements Runnable, InterfaceMo
         if (startTile instanceof PyramidTile && endTile instanceof PyramidTile) {
             PyramidTile startPyramidTile = (PyramidTile) startTile;
             PyramidTile endPyramidTile = (PyramidTile) endTile;
-            return startPyramidTile.getPyramidPiece().getCard().getEnumValue().getComplement().equals(endPyramidTile.getPyramidPiece().getCard().getEnumValue());
+            return startPyramidTile.getPyramidPiece().getCard().getEnumValue().getComplement()
+                    .equals(endPyramidTile.getPyramidPiece().getCard().getEnumValue());
         }
         return false;
     }
 
     public boolean isValidMove(int startX, int startY, int endX, int endY) {
-        Common.debugPrint("Start: " + pieceAt(startX, startY));
-        Common.debugPrint("End: " + pieceAt(endX, endY));
+        try {
+            Common.debugPrint("Start: " + pieceAt(startX, startY));
+            Common.debugPrint("End: " + pieceAt(endX, endY));
+        } catch (NullPointerException e) {
+            Common.debugPrint("caught exception for null piece... keep going");
+        }
         if (isPiece(endX, endY)) {
             if (startX == endX && startY == endY) {
-                return isDeckPosition(startX, startY, endX, endY) || isKing(startX, startY, endX, endY);
+                return isDeckPosition(startX, startY, endX, endY)
+                        || isKing(startX, startY, endX, endY);
             }
             return isComplement(startX, startY, endX, endY);
         }
@@ -123,7 +132,8 @@ public class PyramidModel extends AbstractModel implements Runnable, InterfaceMo
             PyramidTile pyramidTile = (PyramidTile) gameBoardTiles[positionX][positionY];
             return pyramidTile.getPyramidPiece();
         }
-        throw new NullPointerException("Tile at " + positionX + ", " + positionY + " is not a PyramidTile");
+        throw new NullPointerException(
+                "Tile at " + positionX + ", " + positionY + " is not a PyramidTile");
     }
 
     public boolean isPiece(int positionX, int positionY) {
@@ -132,10 +142,11 @@ public class PyramidModel extends AbstractModel implements Runnable, InterfaceMo
 
     public void doMove(int startX, int startY, int endX, int endY) {
         if (isDeckPosition(startX, startY, endX, endY)) {
-            Card newCard = cardManager.getDeck().getNextCard();
-            cardManager.getTurnedCards().add(newCard);
+            Card newCard = pyramidPieceManager.getDeck().getNextCard();
+            pyramidPieceManager.getTurnedCards().add(newCard);
         } else if (isTurnedCardPosition(startX, startY, endX, endY)) {
-            cardManager.getTurnedCards().remove(cardManager.getTurnedCards().size() - 1);
+            pyramidPieceManager.getTurnedCards()
+                    .remove(pyramidPieceManager.getTurnedCards().size() - 1);
             gameBoardTiles[endX][endY] = PyramidTile.generateBlankTile();
             gameBoardTiles[startX][startY] = PyramidTile.generateBlankTile();
         } else {
@@ -143,13 +154,17 @@ public class PyramidModel extends AbstractModel implements Runnable, InterfaceMo
             gameBoardTiles[startX][startY] = PyramidTile.generateBlankTile();
         }
         // add turned card
-        Card card = cardManager.getTurnedCards().get(cardManager.getTurnedCards().size() - 1);
-        PyramidPiece newCardPiece = new PyramidPiece(card, new BoardPosition(config.getTurnedX(), config.getTurnedY()));
-        gameBoardTiles[config.getTurnedX()][config.getTurnedY()] = PyramidTile.createPyramidTile(newCardPiece);
+        Card card = pyramidPieceManager.getTurnedCards()
+                .get(pyramidPieceManager.getTurnedCards().size() - 1);
+        PyramidPiece newCardPiece =
+                new PyramidPiece(card, new BoardPosition(config.getTurnedX(), config.getTurnedY()));
+        gameBoardTiles[config.getTurnedX()][config.getTurnedY()] =
+                PyramidTile.createPyramidTile(newCardPiece);
     }
 
     private boolean isTurnedCardPosition(int startX, int startY, int endX, int endY) {
-        return (startX == config.getTurnedX() && startY == config.getTurnedY()) || (endX == config.getTurnedX() && endY == config.getTurnedY());
+        return (startX == config.getTurnedX() && startY == config.getTurnedY())
+                || (endX == config.getTurnedX() && endY == config.getTurnedY());
     }
 
     public InterfaceMoveState getPreMoveState() {

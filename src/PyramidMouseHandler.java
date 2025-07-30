@@ -11,7 +11,8 @@ public class PyramidMouseHandler implements MouseClickedHandler {
         this.pyramidController = pyramidController;
     }
 
-    @Override public void mouseClicked(int x, int y) {
+    @Override
+    public void mouseClicked(int x, int y) {
         this.mouseX = x;
         this.mouseY = y;
         this.clicked = true;

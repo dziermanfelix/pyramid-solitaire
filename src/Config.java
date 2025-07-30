@@ -15,7 +15,8 @@ public final class Config {
     private final Integer turnedY;
 
     public static Config getInstance() {
-        if (instance == null) instance = new Config();
+        if (instance == null)
+            instance = new Config();
         return instance;
     }
 
@@ -24,7 +25,7 @@ public final class Config {
         tileY = 8;
         tileSize = new Size(80, 105);
         blankColor = Color.BLACK;
-        highlightColor = Color.GREEN;
+        highlightColor = Color.PINK;
         deckX = 5;
         deckY = 7;
         turnedX = 7;

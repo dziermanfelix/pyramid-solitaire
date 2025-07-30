@@ -78,7 +78,7 @@ public class Deck extends ArrayList<Card> {
         Collections.shuffle(this);
     }
 
-    public void printDeck() {
+    public void debugPrintDeck() {
         Common.debugPrint("PRINTING THE DECK:");
         for (Card c : this) {
             Common.debugPrint("\t" + c);

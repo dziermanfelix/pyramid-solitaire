@@ -15,14 +15,16 @@ public class PyramidView extends Thread implements InterfaceView {
     }
 
     public void setupWindow() {
-        this.window = new SpriteWindow("Pyramid Solitaire", new Size(config.getTileX(), config.getTileY()));
+        this.window = new SpriteWindow("Pyramid Solitaire",
+                new Size(config.getTileX(), config.getTileY()));
         window.setTileSize(config.getTileSize());
         pyramidController.setUpMouseHandler(this);
         drawBoard(window.getInitialFrame());
         window.start();
     }
 
-    @Override public synchronized void run() {
+    @Override
+    public synchronized void run() {
         setupWindow();
         pyramidController.matchLoop();
     }
@@ -36,7 +38,8 @@ public class PyramidView extends Thread implements InterfaceView {
         }
     }
 
-    @Override public void update() {
+    @Override
+    public void update() {
         boardChanged = true;
     }
 

@@ -2,9 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum EnumPosition {
-    ZERO_ZERO, ONE_ZERO, ONE_ONE, TWO_ZERO, TWO_ONE, TWO_TWO, THREE_ZERO, THREE_ONE, THREE_TWO, THREE_THREE, FOUR_ZERO,
-    FOUR_ONE, FOUR_TWO, FOUR_THREE, FOUR_FOUR, FIVE_ZERO, FIVE_ONE, FIVE_TWO, FIVE_THREE, FIVE_FOUR, FIVE_FIVE, SIX_ZERO,
-    SIX_ONE, SIX_TWO, SIX_THREE, SIX_FOUR, SIX_FIVE, SIX_SIX, DECK, TURNED;
+    ZERO_ZERO, ONE_ZERO, ONE_ONE, TWO_ZERO, TWO_ONE, TWO_TWO, THREE_ZERO, THREE_ONE, THREE_TWO, THREE_THREE, FOUR_ZERO, FOUR_ONE, FOUR_TWO, FOUR_THREE, FOUR_FOUR, FIVE_ZERO, FIVE_ONE, FIVE_TWO, FIVE_THREE, FIVE_FOUR, FIVE_FIVE, SIX_ZERO, SIX_ONE, SIX_TWO, SIX_THREE, SIX_FOUR, SIX_FIVE, SIX_SIX, DECK, TURNED;
 
     private final Config config = Config.getInstance();
 
@@ -78,7 +76,8 @@ public enum EnumPosition {
     public static List<BoardPosition> getBoardPositions() {
         List<BoardPosition> boardPositions = new ArrayList<>();
         for (EnumPosition enumPosition : EnumPosition.values()) {
-            if (!enumPosition.equals(DECK) && !enumPosition.equals(TURNED)) boardPositions.add(enumPosition.getPosition());
+            if (!enumPosition.equals(DECK) && !enumPosition.equals(TURNED))
+                boardPositions.add(enumPosition.getPosition());
         }
         return boardPositions;
     }

@@ -1,10 +1,11 @@
 import java.util.ArrayList;
 
-public class CardManager {
+public class PyramidPieceManager {
     private final Deck deck = new Deck();
     private final ArrayList<Card> turnedCards = new ArrayList<>();
+    private final ArrayList<PyramidPiece> pyramidPieces = new ArrayList<>();
 
-    public CardManager() {
+    public PyramidPieceManager() {
         turnedCards.add(deck.getBackOfDeck());
     }
 
@@ -14,5 +15,9 @@ public class CardManager {
 
     public ArrayList<Card> getTurnedCards() {
         return turnedCards;
+    }
+
+    public ArrayList<PyramidPiece> getPyramidPieces() {
+        return pyramidPieces;
     }
 }
